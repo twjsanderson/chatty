@@ -2,23 +2,20 @@ import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
 
 //child to  App Component
-class ChatBar extends Component {
-  constructor () {
-    super();
+function ChatBar(props) {
+  const inputValidation = event => {
+    if (event.key === 'Enter') {
+      return props._handleMessages(event.target.value);
 
-    this.state = {
-      name: false
-    }
+    };
   }
 
-  render() {
-    return (
-      <footer className="chatbar">
-        <input className="chatbar-username" placeholder="Your Name (Optional)" />
-        <input className="chatbar-message" placeholder="Type a message and hit ENTER" />
-      </footer>
-    );
-  }
+  return (
+    <footer className="chatbar" onKeyPress={inputValidation}>
+      <input className="chatbar-username" placeholder={props.currentUser} />
+      <input className="chatbar-message" placeholder="Type a message and hit ENTER" />
+    </footer>
+  );
 }
 
 export default ChatBar;
