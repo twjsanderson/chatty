@@ -5,7 +5,7 @@ import Message from './Message.jsx'
 class MessageList extends Component {
   render() {
     const messages = this.props.messages.map((message, key) => (
-      <Message key={message.key} userName={message.username} content={message.content} />
+      <Message key={message.key} username={message.username} content={message.content} />
     ));
     return (
       <main>
