@@ -19,12 +19,9 @@ const server = http.createServer(app);
 // Create a new SocketServer with our newly created http.server
 const wss = new SocketServer({server});
 
-// Fake database that will hold message list for display when a new user connects to server
-const messageDatabase= [];
-
 //Using the websocket wss prefix we have created a function
 //Broadcast a JSON object that is stringified, to all clients listening
-//WebSocket can only send binary and string???? data across its sockets
+//WebSocket can only send binary and string data across its sockets
 wss.broadcastJSON = obj => wss.broadcast(JSON.stringify(obj));
 
 wss.broadcast = data => {
@@ -48,29 +45,29 @@ wss.on('connection', ws => {
 
     //Conditional switch used to assess the type of data in objData and do things with it
     switch (objData.type) {
-      case 'text-message':
-        //For the data called messages then create an object called objectToBroadcast
+      case 'incoming-message': {
+        //For the data called with type  then create an object called objectToBroadcast
         const objectToBroadcast = {
           id: uuid(),
           username: objData.username,
-          date: new Date(),
           content: objData.content,
-          type: 'text-message'
+          type: 'outgoing-message'
         };
-        //push the current database to the objectToBroadcast
-        messageDatabase.push(objectToBroadcast);
         //Send the objectToBroadcast through the socket in JSON format
         wss.broadcastJSON(objectToBroadcast);
-        break;
+        break; }
+      case 'incoming-notification': {
+        const objectToBroadcast = {
+            id: uuid(),
+            content: objData.content,
+            type: 'outgoing-notification'
+          };
+        //Send the objectToBroadcast through the socket in JSON format
+        wss.broadcastJSON(objectToBroadcast);
+        break; }
       default:
     }
   });
-
-  const initialMessage = {
-    type: 'inital-messages',
-    messages: messageDatabase
-  };
-  ws.send(JSON.stringify(initialMessage));
 
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
   //Benefit of leaving this in or out of the wss.on()?

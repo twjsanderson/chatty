@@ -7,6 +7,7 @@ class App extends Component {
     super(props);
     // Stores app data
     this.state = {
+      currentUser: {name: 'Bob'},
       messages: [] // messages coming from the server will be stored here as they arrive
     };
   }
@@ -25,13 +26,15 @@ class App extends Component {
       const json = JSON.parse(payload.data);
 
       switch (json.type) {
-        case 'text-message':
+        case 'outgoing-message':
           this.setState({
             messages: [...this.state.messages, json]
           });
           break;
-        case 'initial-messages':
-          this.setState({ messages: json.messages });
+        case 'outgoing-notification':
+          this.setState({
+            messages: [...this.state.messages, json]
+          });
           break;
         default:
       }
@@ -55,18 +58,23 @@ class App extends Component {
     }, 2000);
   }
 
-  _handleMessages = messageObject => {
+  // A helper function designed to take user inputs, in the form of an object and send them to the server via WebSocket
+  addMessage = messageContent => {
     const newMessage = {
-      key : this.state.messages.id,
-      username : messageObject.name,
-      content : messageObject.message,
-      type: 'text-message'
+      username : this.state.currentUser.name,
+      content : messageContent,
+      type: 'incoming-message'
     }
-    const oldMessages = this.state.messages;
-    const newMessages = [...oldMessages, newMessage]
     this.socket.send(JSON.stringify(newMessage));
+  }
 
-    this.setState({ content: '' });
+  addNotification = userName => {
+    const newMessage = {
+      content : `${this.state.currentUser.name} changed their name to ${userName}.`,
+      type: 'incoming-notification'
+    }
+    this.setState({currentUser: {name: userName}});
+    this.socket.send(JSON.stringify(newMessage));
   }
 
   render() {
@@ -74,7 +82,7 @@ class App extends Component {
       <div className="container">
         <NavBar />
         <MessageList messages={this.state.messages} />
-        <ChatBar _handleNames={this._handleNames} _handleMessages={this._handleMessages} currentUser={this.state.messages.username} />
+        <ChatBar addMessage={this.addMessage} addNotification={this.addNotification} currentUser={this.state.currentUser.name} />
       </div>
     );
   }
