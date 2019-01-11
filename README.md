@@ -1,7 +1,11 @@
-React Boilerplate
+Chatty App
 =====================
 
-A minimal and light dev environment for ReactJS.
+A minimal and fast chat application that allows users to communcation through a simple and light interface. Users can chat anonymously or create their own handles and see the number of users present in the chat room. Users can also change their handles whenever they want. This event will trigger a global notification for all users displaying who changed their handle.
+
+### Stack
+
+Built using React and WebSocket.
 
 ### Usage
 
@@ -22,21 +26,6 @@ npm install
 npm start
 open http://localhost:3000
 ```
-
-### Static Files
-
-You can store static files like images, fonts, etc in the `build` folder.
-
-For example, if you copy a file called my_image.png into the build folder you can access it using `http://localhost:3000/build/my_image.png`.
-
-### Linting
-
-This boilerplate project includes React ESLint configuration.
-
-```
-npm run lint
-```
-
 ### Dependencies
 
 * React
