@@ -63,7 +63,7 @@
     }
 
     .navbar {
-      background: tomato;
+      background: red;
       border-bottom: 1px solid black;
       height: 60px;
       left: 0;
@@ -71,6 +71,18 @@
       position: fixed;
       right: 0;
       top: 0;
+    }
+
+    .users-online {
+      color: inherit;
+      display: block;
+      float: right;
+      font-weight: 600;
+      font-size: 20px;
+      height: 50px;
+      line-height: 60px;
+      padding: 0 10px;
+      text-decoration: none;
     }
 
     .navbar-brand {

@@ -26,8 +26,6 @@ class App extends Component {
       console.log('Recieved message from server. This was the payload: ', payload);
       const json = JSON.parse(payload.data);
 
-      this.setState({count: json.count})
-
       switch (json.type) {
         case 'outgoing-message':
           this.setState({
@@ -39,12 +37,17 @@ class App extends Component {
             messages: [...this.state.messages, json]
           });
           break;
+        case 'outgoing-usercount':
+          this.setState({
+            count: json.count
+          });
+          break;
         default:
       }
     };
 
     //event emitted when connection closed
-    this.socket.onclose = () => {
+    this.socket.onclose = event => {
       console.log('Disconnected from the WebSocket')
     }
 
@@ -78,13 +81,19 @@ class App extends Component {
     this.socket.send(JSON.stringify(newMessage));
   }
 
+  // counterUpdate = event => {
+  //   if (sendAccount !== this.state.count.count) {
+  //     this.state.count.count = "";
+  //   };
+  // }
+
 
   render() {
     return (
       <div className="container">
         <nav className="navbar">
           <a href="/" className="navbar-brand">Chatty App</a>
-          <span className="users-online">Users Online: {this.state.count}</span>
+          <span className="users-online">Users Online: {this.state.count} </span>
         </nav>
         <MessageList messages={this.state.messages} />
         <ChatBar addMessage={this.addMessage} addNotification={this.addNotification} currentUser={this.state.currentUser.name} />

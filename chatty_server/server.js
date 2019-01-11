@@ -37,10 +37,14 @@ wss.broadcast = data => {
 // the ws parameter in the callback.
 wss.on('connection', ws => {
     console.log('A client is connected!')
-    const count = wss.clients.size
-    console.log('Number of clients connected: ', wss.clients.size)
-    wss.broadcastJSON({count})
-    console.log('Count of connected users has been sent to client: ', {count})
+    //a variable with the parsed JSON count incoming from clients
+    const objCount = JSON.parse(wss.clients.size)
+    const objectToBroadcast = {
+      count: objCount,
+      type: 'outgoing-usercount'
+    };
+    //Send the objectToBroadcast through the socket in JSON format
+    wss.broadcastJSON(objectToBroadcast);
 
   ws.on('message', data => {
     //create a variable with the parsed JSON data in it that is incoming from the client
@@ -58,6 +62,7 @@ wss.on('connection', ws => {
         //Send the objectToBroadcast through the socket in JSON format
         wss.broadcastJSON(objectToBroadcast);
         break; }
+
       case 'incoming-notification': {
         const objectToBroadcast = {
             id: uuid(),
@@ -72,9 +77,16 @@ wss.on('connection', ws => {
   });
 
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
+
   ws.on('close', () => {
     console.log('Client disconnected!')
-    console.log('Number of clients connected: ', wss.clients.size)
+    const objCount = JSON.parse(wss.clients.size)
+    const objectToBroadcast = {
+      count: objCount,
+      type: 'outgoing-usercount'
+    };
+    //Send the objectToBroadcast through the socket in JSON format
+    wss.broadcastJSON(objectToBroadcast);
   });
 });
 
