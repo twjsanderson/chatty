@@ -50,7 +50,6 @@ class App extends Component {
     this.socket.onclose = event => {
       console.log('Disconnected from the WebSocket')
     }
-
     setTimeout(() => {
       console.log("Simulating incoming message");
       // Add a new message to the list of messages in the data store
@@ -62,7 +61,7 @@ class App extends Component {
     }, 2000);
   }
 
-  // A helper function designed to take user inputs, in the form of an object and send them to the server via WebSocket
+  // A helper function designed to take messages in the form of an object and send them to the server via WebSocket
   addMessage = messageContent => {
     const newMessage = {
       username: this.state.currentUser.name,
@@ -72,6 +71,7 @@ class App extends Component {
     this.socket.send(JSON.stringify(newMessage));
   }
 
+  // A helper function designed to take new user names and send them to the server via WebSocket
   addNotification = userName => {
     const newMessage = {
       content: `${this.state.currentUser.name} changed their name to ${userName}.`,
@@ -80,13 +80,6 @@ class App extends Component {
     this.setState({currentUser: {name: userName}});
     this.socket.send(JSON.stringify(newMessage));
   }
-
-  // counterUpdate = event => {
-  //   if (sendAccount !== this.state.count.count) {
-  //     this.state.count.count = "";
-  //   };
-  // }
-
 
   render() {
     return (

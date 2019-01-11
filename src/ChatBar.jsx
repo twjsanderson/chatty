@@ -2,11 +2,9 @@ import React, { Component } from 'react';
 
 //child of App Component
 class ChatBar extends Component {
+
   //This function validates the name input using an if statement after Enter has been pushed
   //It sends this.state to _handleMessages in the parent App Component
-
-  //add back in message clearing
-
   nameSubmitValidation = event => {
     if (event.key === 'Enter' ) {
       this.props.addNotification(event.target.value)
@@ -22,9 +20,6 @@ class ChatBar extends Component {
     };
   }
 
-  //IMPORTANT the value of the chat-bar message is set in the constructor as ""
-  //When it changes (ie. onKeyPress) handleChange is called via onChange to reset it to ""
-  //If the field is left blank or an empty field is sent REACT is smart enough to know what the original state was keep it without entering an infinite loop
   render() {
     return (
       <footer className="chatbar">

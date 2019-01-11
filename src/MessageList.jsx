@@ -16,5 +16,3 @@ class MessageList extends Component {
 }
 
 export default MessageList;
-
-// A list of messages, where every message identifies the user who posted the message
