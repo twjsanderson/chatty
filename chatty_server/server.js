@@ -36,17 +36,19 @@ wss.broadcast = data => {
 // When a client connects they are assigned a socket, represented by
 // the ws parameter in the callback.
 wss.on('connection', ws => {
-  console.log('Client connected');
+    console.log('A client is connected!')
+    const count = wss.clients.size
+    console.log('Number of clients connected: ', wss.clients.size)
+    wss.broadcastJSON({count})
+    console.log('Count of connected users has been sent to client: ', {count})
 
   ws.on('message', data => {
-    console.log(`Got message from the client ${data}`)
     //create a variable with the parsed JSON data in it that is incoming from the client
     const objData = JSON.parse(data);
 
     //Conditional switch used to assess the type of data in objData and do things with it
     switch (objData.type) {
       case 'incoming-message': {
-        //For the data called with type  then create an object called objectToBroadcast
         const objectToBroadcast = {
           id: uuid(),
           username: objData.username,
@@ -61,7 +63,7 @@ wss.on('connection', ws => {
             id: uuid(),
             content: objData.content,
             type: 'outgoing-notification'
-          };
+        };
         //Send the objectToBroadcast through the socket in JSON format
         wss.broadcastJSON(objectToBroadcast);
         break; }
@@ -70,9 +72,10 @@ wss.on('connection', ws => {
   });
 
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
-  //Benefit of leaving this in or out of the wss.on()?
-  ws.on('close', () =>
-    console.log('Client disconnected'));
+  ws.on('close', () => {
+    console.log('Client disconnected!')
+    console.log('Number of clients connected: ', wss.clients.size)
+  });
 });
 
 server.listen(PORT, () => {

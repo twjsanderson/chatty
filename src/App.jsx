@@ -7,8 +7,9 @@ class App extends Component {
     super(props);
     // Stores app data
     this.state = {
-      currentUser: {name: 'Bob'},
-      messages: [] // messages coming from the server will be stored here as they arrive
+      currentUser: {name: 'Anonymous'},
+      messages: [], // messages coming from the server will be stored here as they arrive
+      count: 0
     };
   }
 
@@ -16,14 +17,16 @@ class App extends Component {
     this.socket = new WebSocket('ws://localhost:3001');
 
     //event emitted when connected
-    this.socket.onopen = () => {
+    this.socket.onopen = event => {
       console.log('Websocket is connected')
     };
 
     //event emitted when client recieves message from server
     this.socket.onmessage = payload => {
-      console.log('Recieved message from server. This was the payload via onmessage: ', payload);
+      console.log('Recieved message from server. This was the payload: ', payload);
       const json = JSON.parse(payload.data);
+
+      this.setState({count: json.count})
 
       switch (json.type) {
         case 'outgoing-message':
@@ -45,8 +48,6 @@ class App extends Component {
       console.log('Disconnected from the WebSocket')
     }
 
-
-    console.log("componentDidMount <App />");
     setTimeout(() => {
       console.log("Simulating incoming message");
       // Add a new message to the list of messages in the data store
@@ -61,8 +62,8 @@ class App extends Component {
   // A helper function designed to take user inputs, in the form of an object and send them to the server via WebSocket
   addMessage = messageContent => {
     const newMessage = {
-      username : this.state.currentUser.name,
-      content : messageContent,
+      username: this.state.currentUser.name,
+      content: messageContent,
       type: 'incoming-message'
     }
     this.socket.send(JSON.stringify(newMessage));
@@ -70,31 +71,24 @@ class App extends Component {
 
   addNotification = userName => {
     const newMessage = {
-      content : `${this.state.currentUser.name} changed their name to ${userName}.`,
+      content: `${this.state.currentUser.name} changed their name to ${userName}.`,
       type: 'incoming-notification'
     }
     this.setState({currentUser: {name: userName}});
     this.socket.send(JSON.stringify(newMessage));
   }
 
+
   render() {
     return (
       <div className="container">
-        <NavBar />
+        <nav className="navbar">
+          <a href="/" className="navbar-brand">Chatty App</a>
+          <span className="users-online">Users Online: {this.state.count}</span>
+        </nav>
         <MessageList messages={this.state.messages} />
         <ChatBar addMessage={this.addMessage} addNotification={this.addNotification} currentUser={this.state.currentUser.name} />
       </div>
-    );
-  }
-}
-
-//child to  App Component
-class NavBar extends Component {
-  render() {
-    return (
-      <nav className="navbar">
-        <a href="/" className="navbar-brand">Chatty App</a>
-      </nav>
     );
   }
 }

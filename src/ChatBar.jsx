@@ -5,18 +5,20 @@ class ChatBar extends Component {
   //This function validates the name input using an if statement after Enter has been pushed
   //It sends this.state to _handleMessages in the parent App Component
 
+  //add back in message clearing
+
   nameSubmitValidation = event => {
     if (event.key === 'Enter' ) {
       this.props.addNotification(event.target.value)
     }
   }
-
   //This function validates the input using an if statement to execute after Enter has been pushed
   //It sends this.state to _handleMessages in the parent App component
   //The message is then reset to blank using setState
   contentSubmitValidation = event => {
     if (event.key === 'Enter') {
       this.props.addMessage(event.target.value);
+      event.target.value = "";
     };
   }
 
