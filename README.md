@@ -7,6 +7,11 @@ A minimal and fast chat application that allows users to communcation through a 
 
 Built using React and WebSocket.
 
+### Screenshots
+
+!["Chatty Main Page"](https://github.com/twjsanderson/chatty/blob/master/docs/Screenshot%20from%202019-01-11%2016-14-25.png)
+!["Messages"](https://github.com/twjsanderson/chatty/blob/master/docs/Screenshot%20from%202019-01-11%2016-18-04.png)
+
 ### Usage
 
 Clone the boilerplate and create your own git repo.
