@@ -18,40 +18,35 @@ class App extends Component {
 
     //event emitted when connected
     this.socket.onopen = event => {
-      console.log('Websocket is connected')
     };
 
     //event emitted when client recieves message from server
     this.socket.onmessage = payload => {
-      console.log('Recieved message from server. This was the payload: ', payload);
-      const json = JSON.parse(payload.data);
+      const messageData = JSON.parse(payload.data);
 
-      switch (json.type) {
+      switch (messageData.type) {
         case 'outgoing-message':
           this.setState({
-            messages: [...this.state.messages, json]
+            messages: [...this.state.messages, messageData]
           });
           break;
         case 'outgoing-notification':
           this.setState({
-            messages: [...this.state.messages, json]
+            messages: [...this.state.messages, messageData]
           });
           break;
         case 'outgoing-usercount':
           this.setState({
-            count: json.count
+            count: messageData.count
           });
           break;
-        default:
       }
     };
 
     //event emitted when connection closed
     this.socket.onclose = event => {
-      console.log('Disconnected from the WebSocket')
     }
     setTimeout(() => {
-      console.log("Simulating incoming message");
       // Add a new message to the list of messages in the data store
       const newMessage = {key: 3, username: "Chatty Bot", content: "Welcome to Chatty App!"};
       const messages = this.state.messages.concat(newMessage)
